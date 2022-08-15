@@ -8,24 +8,13 @@ namespace Elphin\IcoFileLoader;
  */
 class IcoFileService
 {
-    /**
-     * @var ParserInterface
-     */
-    protected $parser;
+    protected ParserInterface $parser;
+
+    protected RendererInterface $renderer;
 
     /**
-     * @var RendererInterface
-     */
-    protected $renderer;
-
-    /**
-     * IcoFileService constructor
-     *
      * You can inject alternative implementations of the renderer or parser, but for most
      * typical uses, you can accept the defaults.
-     *
-     * @param RendererInterface|null $renderer
-     * @param ParserInterface|null $parser
      */
     public function __construct(RendererInterface $renderer = null, ParserInterface $parser = null)
     {
@@ -100,10 +89,9 @@ class IcoFileService
      * rendering a particular image within it with renderImage.
      *
      * @param string $dataOrFile Either filename or binary data.
-     * @return Icon
      * @throws \InvalidArgumentException if file is not found or invalid
      */
-    public function from($dataOrFile)
+    public function from(string $dataOrFile): Icon
     {
         if ($this->parser->isSupportedBinaryString($dataOrFile)) {
             return $this->parser->parse($dataOrFile);
@@ -115,10 +103,9 @@ class IcoFileService
      * Loads icon from file.
      *
      * @param string $file filename or URL (if fopen wrappers installed)
-     * @return Icon
      * @throws \InvalidArgumentException if file is not found or invalid
      */
-    public function fromFile($file)
+    public function fromFile(string $file): Icon
     {
         try {
             $data = file_get_contents($file);
@@ -135,10 +122,9 @@ class IcoFileService
      * Loads icon from string.
      *
      * @param string $data binary data string containing a .ico file
-     * @return Icon
      * @throws \InvalidArgumentException if file is not found or invalid
      */
-    public function fromString($data)
+    public function fromString(string $data): Icon
     {
         return $this->parser->parse($data);
     }

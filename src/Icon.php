@@ -10,20 +10,17 @@ class Icon implements \ArrayAccess, \Countable, \Iterator
     /**
      * @var IconImage[]
      */
-    private $images = [];
+    private array $images = [];
 
     /**
      * @var int iterator position
      */
-    private $position = 0;
+    private int $position = 0;
 
     /**
      * Returns best icon image with dimensions matching w,h
-     * @param $w
-     * @param $h
-     * @return IconImage|null
      */
-    public function findBestForSize($w, $h)
+    public function findBestForSize(int $w, int $h): ?IconImage
     {
         $bestBitCount = 0;
         $best = null;
@@ -38,9 +35,8 @@ class Icon implements \ArrayAccess, \Countable, \Iterator
 
     /**
      * Finds the highest quality image in the icon
-     * @return IconImage
      */
-    public function findBest()
+    public function findBest(): ?IconImage
     {
         $bestBitCount = 0;
         $bestWidth = 0;
@@ -60,9 +56,8 @@ class Icon implements \ArrayAccess, \Countable, \Iterator
     /**
      * Count number of images in the icon
      * As this class implements Countable you can simply use count($icon) if you desire
-     * @return int
      */
-    public function count()
+    public function count(): int
     {
         return count($this->images);
     }
@@ -73,7 +68,7 @@ class Icon implements \ArrayAccess, \Countable, \Iterator
      * @param integer   $offset
      * @param IconImage $value
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         if (!$value instanceof IconImage) {
             throw new \InvalidArgumentException('Can only add IconImage instances to an Icon');
@@ -89,9 +84,8 @@ class Icon implements \ArrayAccess, \Countable, \Iterator
      * Check if image with particular index exists
      * This is an implementation of ArrayAccess allowing you to do isset($icon[$x])
      * @param integer $offset
-     * @return boolean
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return isset($this->images[$offset]);
     }
@@ -100,9 +94,8 @@ class Icon implements \ArrayAccess, \Countable, \Iterator
      * Remove image from icon
      * This is an implementation of ArrayAccess allowing you to do unset($icon[$x])
      * @param integer $offset
-     * @return boolean
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         unset($this->images[$offset]);
     }
@@ -111,17 +104,16 @@ class Icon implements \ArrayAccess, \Countable, \Iterator
      * Get image from icon
      * This is an implementation of ArrayAccess allowing you to do $image = $icon[$x]
      * @param integer $offset
-     * @return IconImage
      */
-    public function offsetGet($offset)
+    public function offsetGet($offset): ?IconImage
     {
-        return isset($this->images[$offset]) ? $this->images[$offset] : null;
+        return $this->images[$offset] ?? null;
     }
 
     /**
      * Implements \Iterator allowing foreach($icon as $image){}
      */
-    public function rewind()
+    public function rewind(): void
     {
         $this->position = 0;
     }
@@ -129,7 +121,7 @@ class Icon implements \ArrayAccess, \Countable, \Iterator
     /**
      * Implements \Iterator allowing foreach($icon as $image){}
      */
-    public function current()
+    public function current(): IconImage
     {
         return $this->images[$this->position];
     }
@@ -137,7 +129,7 @@ class Icon implements \ArrayAccess, \Countable, \Iterator
     /**
      * Implements \Iterator allowing foreach($icon as $image){}
      */
-    public function key()
+    public function key(): int
     {
         return $this->position;
     }
@@ -145,7 +137,7 @@ class Icon implements \ArrayAccess, \Countable, \Iterator
     /**
      * Implements \Iterator allowing foreach($icon as $image){}
      */
-    public function next()
+    public function next(): void
     {
         ++$this->position;
     }
@@ -153,7 +145,7 @@ class Icon implements \ArrayAccess, \Countable, \Iterator
     /**
      * Implements \Iterator allowing foreach($icon as $image){}
      */
-    public function valid()
+    public function valid(): bool
     {
         return isset($this->images[$this->position]);
     }

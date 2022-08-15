@@ -6,14 +6,11 @@ interface ParserInterface
 {
     /**
      * Returns true if string is more likely to be binary ico data rather than a filename
-     * @param string $data
-     * @return boolean
      */
-    public function isSupportedBinaryString($data);
+    public function isSupportedBinaryString(string $data): bool;
 
     /**
      * @param string $data binary string containing an icon
-     * @return Icon
      */
-    public function parse($data);
+    public function parse(string $data): Icon;
 }
