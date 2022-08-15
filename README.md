@@ -5,6 +5,7 @@ Elphin IcoFileLoader
 [![Coverage Status][ico-scrutinizer]][link-scrutinizer]
 [![Quality Score][ico-code-quality]][link-code-quality]
 
+> Fork from https://github.com/lordelph/icofileloader to make it compatible with newer PHP versions
 
 This package provides a means to load and convert .ico files in a PHP application. 
 It has no dependencies apart from [gd](http://php.net/manual/en/book.image.php) 
@@ -19,13 +20,6 @@ IcoFileLoader is available via Composer:
 
 ```bash
 composer require lordelph/icofileloader
-```
-
-The latest version targets currently supported php versions (5.6, 7.0, 7.1). 
-If you need to use php5.4 or php5.5, you must install the v1.* branch
-
-```bash
-composer require lordelph/icofileloader:1.*
 ```
 
 ## Usage
