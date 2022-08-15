@@ -13,7 +13,7 @@ class IcoParser implements ParserInterface
     /**
      * @inheritdoc
      */
-    public function isSupportedBinaryString($data)
+    public function isSupportedBinaryString(string $data): bool
     {
         $supported = !is_null($this->parseIconDir($data));
         $supported = $supported || $this->isPNG($data);
@@ -22,10 +22,9 @@ class IcoParser implements ParserInterface
 
     /**
      * Reads the ICONDIR header and verifies it looks sane
-     * @param string $data
      * @return array|null - null is returned if the file doesn't look like an .ico file
      */
-    private function parseIconDir($data)
+    private function parseIconDir(string $data): ?array
     {
         $icondir = unpack('SReserved/SType/SCount', $data);
         if ($icondir['Reserved'] == 0 && $icondir['Type'] == 1) {
@@ -35,10 +34,9 @@ class IcoParser implements ParserInterface
     }
 
     /**
-     * @param $data
      * @return bool true if first four bytes look like a PNG
      */
-    private function isPNG($data)
+    private function isPNG(string $data): bool
     {
         $signature = unpack('LFourCC', $data);
         return ($signature['FourCC'] == 0x474e5089);
@@ -47,7 +45,7 @@ class IcoParser implements ParserInterface
     /**
      * @inheritdoc
      */
-    public function parse($data)
+    public function parse(string $data): Icon
     {
         if ($this->isPNG($data)) {
             return $this->parsePNGAsIco($data);
@@ -55,7 +53,7 @@ class IcoParser implements ParserInterface
         return $this->parseICO($data);
     }
 
-    private function parseICO($data)
+    private function parseICO(string $data): Icon
     {
         $icondir = $this->parseIconDir($data);
         if (!$icondir) {
@@ -82,7 +80,7 @@ class IcoParser implements ParserInterface
         return $icon;
     }
 
-    private function parsePNGAsIco($data)
+    private function parsePNGAsIco(string $data): Icon
     {
         $png = imagecreatefromstring($data);
         $w = imagesx($png);
@@ -108,12 +106,8 @@ class IcoParser implements ParserInterface
 
     /**
      * Parse the sequence of ICONDIRENTRY structures
-     * @param Icon $icon
-     * @param string $data
-     * @param integer $count
-     * @return string
      */
-    private function parseIconDirEntries(Icon $icon, $data, $count)
+    private function parseIconDirEntries(Icon $icon, string $data, int $count): string
     {
         for ($i = 0; $i < $count; ++$i) {
             $icoDirEntry = unpack(
@@ -142,10 +136,8 @@ class IcoParser implements ParserInterface
 
     /**
      * Handle icon image which is PNG formatted
-     * @param IconImage $entry
-     * @param string $data
      */
-    private function parsePng(IconImage $entry, $data)
+    private function parsePng(IconImage $entry, string $data): void
     {
         //a png icon contains a complete png image at the file offset
         $png = substr($data, $entry->fileOffset, $entry->sizeInBytes);
@@ -154,10 +146,8 @@ class IcoParser implements ParserInterface
 
     /**
      * Handle icon image which is BMP formatted
-     * @param IconImage $entry
-     * @param string $data
      */
-    private function parseBmp(IconImage $entry, $data)
+    private function parseBmp(IconImage $entry, string $data): void
     {
         $bitmapInfoHeader = unpack(
             'LSize/LWidth/LHeight/SPlanes/SBitCount/LCompression/LImageSize/' .
@@ -182,10 +172,8 @@ class IcoParser implements ParserInterface
 
     /**
      * Parse an image which doesn't use a palette
-     * @param IconImage $entry
-     * @param string $data
      */
-    private function parseTrueColorImageData(IconImage $entry, $data)
+    private function parseTrueColorImageData(IconImage $entry, string $data): void
     {
         $length = $entry->bmpHeaderWidth * $entry->bmpHeaderHeight * ($entry->bitCount / 8);
         $bmpData = substr($data, $entry->fileOffset + $entry->bmpHeaderSize, $length);
@@ -194,10 +182,8 @@ class IcoParser implements ParserInterface
 
     /**
      * Parse an image which uses a limited palette of colours
-     * @param IconImage $entry
-     * @param string $data
      */
-    private function parsePaletteImageData(IconImage $entry, $data)
+    private function parsePaletteImageData(IconImage $entry, string $data): void
     {
         $pal = substr($data, $entry->fileOffset + $entry->bmpHeaderSize, $entry->colorCount * 4);
         $idx = 0;

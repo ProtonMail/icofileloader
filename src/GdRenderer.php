@@ -9,7 +9,7 @@ namespace Elphin\IcoFileLoader;
  */
 class GdRenderer implements RendererInterface
 {
-    public function render(IconImage $img, array $opts = null)
+    public function render(IconImage $img, array $opts = null): \GdImage|bool
     {
         $opts = $this->initOptions($img, $opts);
 
@@ -26,12 +26,12 @@ class GdRenderer implements RendererInterface
         return $gd;
     }
 
-    protected function initOptions(IconImage $img, $opts)
+    protected function initOptions(IconImage $img, $opts): array
     {
         $opts = is_array($opts) ? $opts : [];
-        $opts['w'] = isset($opts['w']) ? $opts['w'] : $img->width;
-        $opts['h'] = isset($opts['h']) ? $opts['h'] : $img->height;
-        $opts['background'] = isset($opts['background']) ? $opts['background'] : null;
+        $opts['w'] = $opts['w'] ?? $img->width;
+        $opts['h'] = $opts['h'] ?? $img->height;
+        $opts['background'] = $opts['background'] ?? null;
         return $opts;
     }
 

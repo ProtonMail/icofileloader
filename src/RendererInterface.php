@@ -15,5 +15,5 @@ interface RendererInterface
      * @param array|null $opts array of name/value pairs specific to the renderer
      * @return mixed|null rendered result, depending on renderer
      */
-    public function render(IconImage $img, array $opts = null);
+    public function render(IconImage $img, array $opts = null): mixed;
 }

@@ -56,29 +56,28 @@ class IconImage
     public $bmpHeaderHeight;
 
     /**
-     * @var string PNG file for icon images which use PNG
+     * @var ?string PNG file for icon images which use PNG
      */
-    public $pngData = null;
+    public ?string $pngData = null;
 
     /**
-     * @var string BMP bitmap data for images which use BMP
+     * @var ?string BMP bitmap data for images which use BMP
      */
-    public $bmpData = null;
+    public ?string $bmpData = null;
 
-    public $palette = [];
+    public array $palette = [];
 
     /**
-     * IconEntry constructor.
      * @param array $data array of data extracted from a ICONDIRENTRY binary structure
      */
-    public function __construct($data)
+    public function __construct(array $data)
     {
         foreach ($data as $name => $value) {
             $this->$name = $value;
         }
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return sprintf(
             '%dx%d pixel %s @ %d bits/pixel',
@@ -91,19 +90,18 @@ class IconImage
 
     /**
      * Stores binary PNG file for the icon
-     * @param string $pngData
      */
-    public function setPngFile($pngData)
+    public function setPngFile(string $pngData): void
     {
         $this->pngData = $pngData;
     }
 
-    public function isPng()
+    public function isPng(): bool
     {
         return !empty($this->pngData);
     }
 
-    public function isBmp()
+    public function isBmp(): bool
     {
         return empty($this->pngData);
     }
@@ -119,12 +117,12 @@ class IconImage
         $this->bmpHeaderSize = $bmpInfo['Size'];
     }
 
-    public function setBitmapData($bmpData)
+    public function setBitmapData(string $bmpData): void
     {
         $this->bmpData = $bmpData;
     }
 
-    public function addToBmpPalette($r, $g, $b, $reserved)
+    public function addToBmpPalette(int $r, int $g, int $b, int $reserved): void
     {
         $this->palette[] = ['red' => $r, 'green' => $g, 'blue' => $b, 'reserved' => $reserved];
     }
